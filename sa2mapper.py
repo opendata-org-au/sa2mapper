@@ -39,10 +39,7 @@ def init_mapping_dictionary():
     with open("sa2mappingfile.csv", "r") as mapping_file:
         csv_reader = csv.reader(mapping_file, delimiter=',')
         next(csv_reader)
-        old_region_id = None
-        new_region_id = None
-        weight = None
-        current_shapes_array = None
+
         for lines in csv_reader:
             old_region_id = lines[0]
             new_region_id = lines[1]
@@ -77,13 +74,13 @@ def update_new_format_dictionary(dictionary, sa2_2016_value, data):
     if dictionary.get(region_id) is None:
         sa2_weight = sa2_2016_value.get('weight')
         if not is_float(sa2_weight):
-            print('%s cannot be converted to a float' % sa2_weight)
+            print('%s cannot be converted to a float for region SA 2016 region %s' % (sa2_weight, region_id))
             return
         dictionary.update({region_id: {'region_id': region_id, 'weight': (data * float(sa2_2016_value.get('weight')))}})
     else:
         sa2_weight = sa2_2016_value.get('weight')
         if not is_float(sa2_weight):
-            print('%s cannot be converted to a float' % sa2_weight)
+            print('%s cannot be converted to a float for SA 2016 region %s' % (sa2_weight, region_id))
             return
 
         current_format_object = dictionary.get(region_id)
@@ -101,7 +98,7 @@ def convert_old_to_new_format(mapping_dictionary, old_format_lines):
         region_id = line[0]
         data_value = line[1]
         if not is_float(data_value):
-            print('%s cannot be converted to a float' % data_value)
+            print('%s cannot be converted to a float for SA 2011 region id %s' % (data_value, region_id))
             continue
         converted_data_value = float(data_value)
         sa2_2016_values = mapping_dictionary.get(region_id)
